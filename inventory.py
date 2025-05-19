@@ -21,29 +21,29 @@ class Inventory:
         name, category, quantity, price, aisle_name =get_input_add_product()
         # Validate input types and values
         if not isinstance(name, str) or not name.strip():
-            print("❌ Error: Product name must be a non-empty string.")
+            print(" Error: Product name must be a non-empty string.")
             return False
         if not isinstance(category, str) or not category.strip():
-            print("❌ Error: Category must be a non-empty string.")
+            print(" Error: Category must be a non-empty string.")
             return False
         if not isinstance(aisle_name, str) or not aisle_name.strip():
-            print("❌ Error: Aisle name must be a non-empty string.")
+            print(" Error: Aisle name must be a non-empty string.")
             return False
         try:
             quantity = int(quantity)
             if quantity <= 0:
-                print("❌ Error: Quantity must be a positive integer.")
+                print(" Error: Quantity must be a positive integer.")
                 return False
         except (ValueError, TypeError):
-            print("❌ Error: Quantity must be a valid integer.")
+            print(" Error: Quantity must be a valid integer.")
             return False
         try:
             price = float(price)
             if price <= 0:
-                print("❌ Error: Price must be a positive number.")
+                print(" Error: Price must be a positive number.")
                 return False
         except (ValueError, TypeError):
-            print("❌ Error: Price must be a valid number.")
+            print(" Error: Price must be a valid number.")
             return False
 
 
@@ -55,12 +55,12 @@ class Inventory:
         try:
             aisle_exists = self.aisle_manager.aisle_exists(aisle_name)
         except Exception as e:
-            print(f"❌ Error checking aisle existence: {e}")
+            print(f" Error checking aisle existence: {e}")
             return False
 
         if not aisle_exists:
             if role != "Manager":
-                print("❌ Error: Only managers can add products to a new aisle.")
+                print(" Error: Only managers can add products to a new aisle.")
                 return False
             # Create aisle if it doesn't exist
             self.aisle_manager.add_aisle(aisle_name)
@@ -69,7 +69,7 @@ class Inventory:
         try:
             product_id = generate_id(name, "inventory", self.db)
             if not product_id:
-                print("❌ Error: Failed to generate a valid product ID.")
+                print(" Error: Failed to generate a valid product ID.")
                 return False
 
             query = (
@@ -87,10 +87,10 @@ class Inventory:
             )
             self.db.execute_query(update_aisle_query, (name, aisle_name))
 
-            print(f"✅ Product '{name}' added to Aisle '{aisle_name}' with ID: {product_id}.")
+            print(f" Product '{name}' added to Aisle '{aisle_name}' with ID: {product_id}.")
             return True
         except Exception as e:
-            print(f"❌ An error occurred while adding the product: {e}")
+            print(f" An error occurred while adding the product: {e}")
             return False
 
     def update_stock(self):
@@ -105,7 +105,7 @@ class Inventory:
                 return
 
             if not isinstance(product_id, str) or not product_id.strip():
-                print("❌ Error: Product ID must be a non-empty string.")
+                print(" Error: Product ID must be a non-empty string.")
                 continue
 
             quantity = safe_input("Enter Product Quantity (Press 'exit' to discard process): ")
@@ -116,10 +116,10 @@ class Inventory:
             try:
                 quantity = int(quantity)
                 if quantity < 0:
-                    print("❌ Error: Quantity cannot be negative.")
+                    print(" Error: Quantity cannot be negative.")
                     continue
             except (ValueError, TypeError):
-                print("❌ Error: Quantity must be a valid integer.")
+                print(" Error: Quantity must be a valid integer.")
                 continue
 
             # If input is valid, update the database
@@ -127,10 +127,10 @@ class Inventory:
             try:
                 query = "UPDATE inventory SET quantity = quantity + ? WHERE id=?"
                 self.db.execute_query(query, (quantity, product_id))
-                print(f"✅ Stock updated for Product ID: {product_id}.")
+                print(f" Stock updated for Product ID: {product_id}.")
                 break  # Exit loop after successful update
             except Exception as e:
-                print(f"❌ Error updating stock: {e}")
+                print(f" Error updating stock: {e}")
 
 
 def get_input_add_product():
@@ -160,7 +160,7 @@ def get_input_add_product():
             qty = int(qty_input)
             price = float(price_input)
         except ValueError:
-            print("❌ Invalid input for quantity or price. Please enter numeric values.")
+            print(" Invalid input for quantity or price. Please enter numeric values.")
             continue
         return  prod_name, category, qty, price, aisle_name
 

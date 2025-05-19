@@ -37,14 +37,14 @@ class Aisle:
             bool: True if the aisle exists, False otherwise.
         """
         if not isinstance(name, str) or not name.strip():
-            print("❌ Aisle name must be a non-empty string.")
+            print(" Aisle name must be a non-empty string.")
             return False
         query = "SELECT id FROM aisles WHERE name = ?"
         try:
             result = self.db.fetch_query(query, (name,))
             return bool(result)
         except Exception as e:
-            print(f"❌ Error checking aisle existence: {e}")
+            print(f"Error checking aisle existence: {e}")
             return False
 
 

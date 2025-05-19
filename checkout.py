@@ -30,13 +30,13 @@ class Checkout:
                 if product:
                     price, stock = product[0]
                     if quantity > stock:
-                        print(f"⚠️ Not enough stock for '{name}'! Available: {stock}")
+                        print(f" Not enough stock for '{name}'! Available: {stock}")
                         return None
                     sold_price = price  # record the current price as the sold price
                     item["sold_price"] = sold_price
                     cart_total += sold_price * quantity
                 else:
-                    print(f"⚠️ Product '{name}' not found!")
+                    print(f" Product '{name}' not found!")
                     return None
         return cart_total
 
@@ -60,7 +60,7 @@ class Checkout:
                     discount = 0.20  # 20% discount
                     discount_percentage = 20
                 else:
-                    print("⚠️ Self-checkout discount is not allowed. No employee discount applied.")
+                    print(" Self-checkout discount is not allowed. No employee discount applied.")
 
         # if no employee discount, check for premium membership discount
         if discount == 0:
@@ -100,7 +100,7 @@ class Checkout:
         try:
             user_choice = int(user_choice_input)
         except ValueError:
-            print("❌ Invalid input. Please enter a valid number.")
+            print(" Invalid input. Please enter a valid number.")
             return
 
         if user_choice == 1:
@@ -132,7 +132,7 @@ class Checkout:
             print("Proceeding with anonymous checkout...")
             self._self_checkout_process(customer_id, membership="Anonymous")
         else:
-            print(f"❌ {user_choice} is not a valid option. Please choose again.")
+            print(f" {user_choice} is not a valid option. Please choose again.")
             return
 
     def _self_checkout_process(self, customer_id, membership="None",new_member=None):
@@ -201,7 +201,7 @@ class Checkout:
             try:
                 user_choice = int(user_choice_input)
             except ValueError:
-                print("❌ Invalid input. Please enter a valid number.")
+                print(" Invalid input. Please enter a valid number.")
                 return
 
             if user_choice == 1:
@@ -241,9 +241,9 @@ class Checkout:
                 membership = "Anonymous"
                 self.process_employee_checkout(employee_id, customer_id, membership)
             else:
-                print(f"❌ {user_choice} is not a valid option. Please choose again.")
+                print(f" {user_choice} is not a valid option. Please choose again.")
         except Exception as e:
-            print(f"❌ Error: {e}")
+            print(f" Error: {e}")
 
     def process_employee_checkout(self, employee_id, customer_id, membership, new_member = None):
         """
@@ -285,12 +285,12 @@ class Checkout:
         """Handles payment, updates inventory, and prints a bill."""
         # Validate payment method early
         if payment_method.lower() not in ["cash", "card"]:
-            print("❌ Invalid payment method! Transaction canceled.")
+            print(" Invalid payment method! Transaction canceled.")
             return False
 
         total = self.calculate_cart_total(cart)
         if total is None:
-            print("❌ Transaction failed due to stock issues.")
+            print(" Transaction failed due to stock issues.")
             return False
 
         # For employee checkout, pass the processing employee ID; for self checkout, this will be None.
@@ -317,7 +317,7 @@ class Checkout:
             print(f"Card transaction fee (2%): +${transaction_fee:.2f}.", end=" ")
         print(f"Final Amount: ${final_total:.2f}")
 
-        print(f"✅ Payment successful ({payment_method.capitalize()}).")
+        print(f" Payment successful ({payment_method.capitalize()}).")
 
         # Build item detail and total quantity for sales record
         total_quantity = sum(item['quantity'] for item in cart)
@@ -355,7 +355,7 @@ class Checkout:
                 print(f"Error updating inventory for '{item['name']}': {e}")
                 continue
 
-        print("✅ Inventory updated successfully.")
+        print(" Inventory updated successfully.")
         self.print_bill(cart, total, discount_percentage, discount_amount, discounted_total,
                         tax_amount, transaction_fee, final_total, reference_number, payment_method, membership)
         return True
@@ -367,9 +367,9 @@ class Checkout:
         """
         print("\n===============================")
         if is_refund:
-            print("         🔄 REFUND RECEIPT        ")
+            print("          REFUND RECEIPT        ")
         else:
-            print("         🏪 SUPERMARKET        ")
+            print("          SUPERMARKET        ")
         print("===============================")
         print(f"Ref No: {reference_number}")
         if is_refund and refund_reference:
@@ -421,7 +421,7 @@ class Checkout:
             (reference_no,)
         )
         if not sale_record:
-            print("❌ Sale record not found.")
+            print(" Sale record not found.")
             return
         sale = sale_record[0]
         sale_id = sale[0]
@@ -435,18 +435,18 @@ class Checkout:
 
         # Check refund period
         if datetime.now() - sale_date > timedelta(days=7):
-            print("❌ Refund period expired. Refunds are only accepted within 7 days of purchase.")
+            print(" Refund period expired. Refunds are only accepted within 7 days of purchase.")
             return
 
         # Do not allow refund if the customer is an employee
         if self.db.fetch_query("SELECT id FROM employees WHERE id=?", (sale_customer_id,)):
-            print("❌ Refund not allowed for employee customers.")
+            print(" Refund not allowed for employee customers.")
             return
 
         # Ask for refund processor's employee id for authorization
         refund_processor = safe_input("Enter your employee ID for refund processing: ")
         if sale_employee_id is not None and str(sale_employee_id) == refund_processor:
-            print("❌ You cannot process a refund for your own sale.")
+            print(" You cannot process a refund for your own sale.")
             return
 
         # Parse the sale items into two dictionaries: one for refundable quantities and one for the sold prices.
@@ -482,14 +482,14 @@ class Checkout:
                 item_name = item_name.strip()
                 refund_qty = int(qty_str.strip())
                 if item_name not in sale_items:
-                    print(f"❌ Item '{item_name}' was not part of the original sale.")
+                    print(f" Item '{item_name}' was not part of the original sale.")
                     continue
                 if refund_qty > sale_items[item_name]:
-                    print(f"❌ Refund quantity for '{item_name}' exceeds refundable quantity ({sale_items[item_name]}).")
+                    print(f" Refund quantity for '{item_name}' exceeds refundable quantity ({sale_items[item_name]}).")
                     continue
                 # Do not allow refunding membership fee
                 if item_name.lower() == "membership":
-                    print("❌ Membership fee cannot be refunded.")
+                    print(" Membership fee cannot be refunded.")
                     continue
                 # Use the sold price from the original sale
                 sold_price = sale_prices.get(item_name)
@@ -518,7 +518,7 @@ class Checkout:
         if total_refund_amount > 200:
             manager_check = self.db.fetch_query("SELECT role FROM employees WHERE id=?", (refund_processor,))
             if not manager_check or manager_check[0][0].lower() != "manager":
-                print("❌ Refund amount exceeds $200. Please have a manager process this refund.")
+                print(" Refund amount exceeds $200. Please have a manager process this refund.")
                 return
 
         # Generate a refund reference number
@@ -566,7 +566,7 @@ class Checkout:
             print(f"Error inserting refund record into database: {e}")
             return
 
-        print("✅ Refund processed successfully.")
+        print(" Refund processed successfully.")
         # Print refund bill with a refund header
         # Build a cart-like list from refund_items for printing
         refund_cart = []

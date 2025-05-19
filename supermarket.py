@@ -33,7 +33,7 @@ def supermarket_program():
         try:
             choice = int(main_choice)
         except ValueError:
-            print("❌ Invalid input. Please enter a valid number.")
+            print(" Invalid input. Please enter a valid number.")
             continue
 
         if 1 <= choice <= len(default_menu_choices):
@@ -59,7 +59,7 @@ def supermarket_program():
                     supermarket_employee()
 
                 else:
-                    print("❌ Invalid choice. Please try again.")
+                    print(" Invalid choice. Please try again.")
         else:
-            print("❌ Invalid choice. Please try again.")
+            print(" Invalid choice. Please try again.")
 

@@ -19,7 +19,7 @@ class Employee:
             result = self.db.fetch_query("SELECT COUNT(*) FROM employees WHERE role ='Manager'")
             employees_exist = result[0][0] if result else 0
         except Exception as e:
-            print(f"❌ Error checking for manager existence: {e}")
+            print(f" Error checking for manager existence: {e}")
             return
 
         if employees_exist == 0:
@@ -37,7 +37,7 @@ class Employee:
         """Add an employee (Manager or Employee) with a hashed password."""
 
         if role not in ["Manager", "Employee"]:
-            print("❌ Role must be either 'Manager' or 'Employee'.")
+            print(" Role must be either 'Manager' or 'Employee'.")
             return
 
         while name is None:
@@ -46,7 +46,7 @@ class Employee:
                 print("Returning to Employee Menu.")
                 return
             if not name.strip():
-                print("❌ Employee name must be a non-empty string.")
+                print(" Employee name must be a non-empty string.")
                 name = None
 
         while password is None:
@@ -55,7 +55,7 @@ class Employee:
                 print("Returning to Employee Menu.")
                 return
             if not password.strip():
-                print("❌ Password must be a non-empty string.")
+                print(" Password must be a non-empty string.")
                 password = None
 
         # Sanitize inputs
@@ -66,15 +66,15 @@ class Employee:
         # Generate a unique employee ID
         emp_id = generate_id(name, "employees", self.db)
         if not emp_id:
-            print("❌ Failed to generate a valid employee ID.")
+            print(" Failed to generate a valid employee ID.")
             return
 
         query = "INSERT INTO employees (id, name, role, password) VALUES (?, ?, ?, ?)"
         try:
             self.db.execute_query(query, (emp_id, name, role, hashed_password))
-            print(f"✅ Employee '{name}' ({role}) added successfully with ID: {emp_id}.")
+            print(f" Employee '{name}' ({role}) added successfully with ID: {emp_id}.")
         except Exception as e:
-            print(f"❌ Error adding employee: {e}")
+            print(f" Error adding employee: {e}")
 
     def verify_credentials(self, emp_id, password):
         """
@@ -91,7 +91,7 @@ class Employee:
         try:
             result = self.db.fetch_query(query, (emp_id,))
         except Exception as e:
-            print(f"❌ Error fetching employee data: {e}")
+            print(f" Error fetching employee data: {e}")
             return "not_found", None
 
         if not result:
@@ -112,7 +112,7 @@ class Employee:
 
         # Validate Employee ID
         if not isinstance(emp_id, str) or not emp_id.strip():
-            print("❌ Employee ID must be a non‑empty string.")
+            print(" Employee ID must be a non‑empty string.")
             return
         emp_id = emp_id.strip()
 
@@ -121,20 +121,20 @@ class Employee:
         employee = self.db.fetch_query(check_query, (emp_id,))
 
         if not employee:
-            print(f"❌ Employee {emp_id} not found in the database.")
+            print(f" Employee {emp_id} not found in the database.")
             return
 
         # Proceed with deletion
         delete_query = "DELETE FROM employees WHERE id=?"
         try:
             self.db.execute_query(delete_query, (emp_id,))
-            print(f"✅ Employee {emp_id} removed successfully.")
+            print(f" Employee {emp_id} removed successfully.")
         except Exception as e:
-            print(f"❌ Error removing employee {emp_id}: {e}")
+            print(f" Error removing employee {emp_id}: {e}")
 
     def unlock_system(self):
         """Prompt for manager credentials to unlock the system."""
-        print("🔒 System is locked due to multiple failed login attempts.")
+        print(" System is locked due to multiple failed login attempts.")
         print("Manager override required to unlock the system.")
         manager_id = input("Enter Manager ID: ").strip()
         manager_password = input("Enter Manager Password: ").strip()
@@ -154,17 +154,17 @@ class Employee:
             password = input("Enter Password: ").strip()
             status, role = self.verify_credentials(emp_id, password)
             if status == "success":
-                print(f"✅ Logged in as {role}.")
+                print(f" Logged in as {role}.")
                 return emp_id, role
             else:
                 login_attempts += 1
-                print(f"❌ Invalid credentials. Attempt {login_attempts}/3.")
+                print(f" Invalid credentials. Attempt {login_attempts}/3.")
                 if login_attempts >= 3:
                     if self.unlock_system():
                         login_attempts = 0
-                        print("🔓 System unlocked. Please try logging in again.")
+                        print(" System unlocked. Please try logging in again.")
                     else:
-                        print("❌ Unlock failed. Please contact tech support.")
+                        print(" Unlock failed. Please contact tech support.")
                         exit(1)
 
 

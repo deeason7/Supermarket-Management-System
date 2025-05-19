@@ -18,7 +18,7 @@ def supermarket_employee():
     # Ensure employee login validation is successful
     login_info = emp.employee_login_validation()
     if not login_info or login_info[0] is None:
-        print("❌ Login failed. Exiting employee menu.")
+        print(" Login failed. Exiting employee menu.")
         return
     role = login_info[1]
 
@@ -45,7 +45,7 @@ def supermarket_employee():
                     print("Returning to Employee Menu.")
                     return
                 if not role.strip():
-                    print("❌ Employee name must be a non-empty string.")
+                    print(" Employee name must be a non-empty string.")
                     role = None
 
                 emp.add_employee(role)
@@ -84,7 +84,7 @@ def supermarket_employee():
                 finally:
                     db.close()
             else:
-                print("❌ Invalid choice. Please try again.")
+                print(" Invalid choice. Please try again.")
 
         elif role == "Employee":
             print("1. Refund")
@@ -101,4 +101,4 @@ def supermarket_employee():
             elif choice == "2":
                 inv.add_product(role)
             else:
-                print("❌ Invalid choice. Please try again.")
+                print(" Invalid choice. Please try again.")
